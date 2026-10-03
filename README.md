@@ -14,6 +14,10 @@ $ python -m beatguard check industry_song.mp3 --report report.html
      Evidence:       6,781 matching points, 100% coverage
 ```
 
+## Why I built this
+
+I make music ([my SoundCloud](https://soundcloud.com/jeffreyesdavid)). Bigger artists taking beats from smaller, up-and-coming producers happens a lot, and the producer usually can't prove anything. I wanted a tool that gives producers like me real evidence: proof of when we made a beat, and proof of exactly where it shows up in someone else's song.
+
 ## What it does
 
 | Step | Command | What happens |
