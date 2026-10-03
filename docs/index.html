@@ -95,6 +95,11 @@
   pre { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; overflow-x: auto; font-size: 14px; line-height: 1.7; margin: 0; }
   pre .c { color: var(--noise); }
 
+  .btn.coffee { background: #ffdd00; border-color: #ffdd00; color: #1a1400; }
+  .btn.big { padding: 14px 24px; font-size: 17px; white-space: nowrap; }
+  nav .links a.coffee-link { color: #ffdd00; }
+  .support { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+             background: linear-gradient(120deg, rgba(255,221,0,.08), rgba(139,123,255,.08)); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
   footer { padding: 64px 0 40px; color: var(--muted); font-size: 14px; }
   footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--line); padding-top: 20px; }
   .fine { font-size: 13px; margin-top: 14px; max-width: 70ch; }
@@ -117,6 +122,7 @@
       <a href="#report" class="hide-sm">Sample report</a>
       <a href="#start">Get started</a>
       <a href="https://github.com/jeffreyesdavid/beat-guard">GitHub</a>
+      <a href="https://buymeacoffee.com/jeffreyesdavid" class="coffee-link">☕ Support</a>
     </div>
   </nav>
 
@@ -154,7 +160,7 @@
       <blockquote>Bigger artists take beats from smaller, up-and-coming producers all the time, and the producer usually can't prove a thing.</blockquote>
       <div class="side">
         <p>I'm a producer. I built beat-guard so producers like me have real evidence: proof of <strong>when</strong> we made a beat, and proof of <strong>exactly where</strong> it shows up in someone else's song.</p>
-        <a class="btn" href="https://soundcloud.com/jeffreyesdavid">▶ Hear my music on SoundCloud</a>
+        <div class="cta"><a class="btn" href="https://soundcloud.com/jeffreyesdavid">▶ Hear my music</a><a class="btn coffee" href="https://buymeacoffee.com/jeffreyesdavid">☕ Buy me a coffee</a></div>
       </div>
     </div>
   </section>
@@ -214,13 +220,22 @@ python -m beatguard register ~/Music/beats/*.wav
 <span class="c"># check a song you're suspicious about</span>
 python -m beatguard check suspect_song.mp3 --report report.html</pre>
   </section>
+  <section id="support">
+    <div class="support">
+      <div>
+        <h2>Keep beat-guard free</h2>
+        <p class="sub" style="margin:0">I build this in my own time so producers don't have to pay to protect their work. If it helped you, a coffee keeps it going.</p>
+      </div>
+      <a class="btn coffee big" href="https://buymeacoffee.com/jeffreyesdavid">☕ Buy me a coffee</a>
+    </div>
+  </section>
 </div>
 
 <footer>
   <div class="wrap">
     <div class="row">
       <span>Built by <a href="https://github.com/jeffreyesdavid">Jeffrey David</a>, producer &amp; security analyst in training</span>
-      <span><a href="https://soundcloud.com/jeffreyesdavid">SoundCloud</a> · <a href="https://github.com/jeffreyesdavid/beat-guard">GitHub</a> · MIT License</span>
+      <span><a href="https://buymeacoffee.com/jeffreyesdavid">Buy me a coffee</a> · <a href="https://soundcloud.com/jeffreyesdavid">SoundCloud</a> · <a href="https://github.com/jeffreyesdavid/beat-guard">GitHub</a> · MIT License</span>
     </div>
     <p class="fine">beat-guard provides supporting evidence based on acoustic fingerprint matching. It is not a legal determination. To protect your work legally, register it with the U.S. Copyright Office and talk to an entertainment attorney.</p>
   </div>

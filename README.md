@@ -2,7 +2,7 @@
 
 **Prove your beat is yours, and catch it when someone else uses it.**
 
-🌐 **[Project page](https://jeffreyesdavid.github.io/beat-guard/)**
+🌐 **[Project page](https://jeffreyesdavid.github.io/beat-guard/)** · ☕ **[Buy me a coffee](https://buymeacoffee.com/jeffreyesdavid)**
 
 Bigger artists taking beats from small producers happens all the time, and the producer usually has no proof and no way to show *where* their beat was used. beat-guard fingerprints your beats the way Shazam does, timestamps them on the Bitcoin blockchain, and then scans any song to find your beat inside it, even with vocals rapped over it.
 
