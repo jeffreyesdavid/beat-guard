@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>beat-guard | Prove your beat is yours</title>
+<meta name="description" content="beat-guard fingerprints your beats, timestamps them on Bitcoin, and finds them inside other songs, even with vocals on top. Built by a producer, for producers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080f;
+    --bg2: #0d1020;
+    --card: #11152a;
+    --line: #232a4a;
+    --text: #eef0fb;
+    --muted: #9aa1c4;
+    --beat: #8b7bff;     /* your beat */
+    --hit: #3ee6b0;      /* matched */
+    --noise: #4a5280;    /* everything else */
+    --warn: #ff6b8a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Space Grotesk", system-ui, sans-serif; line-height: 1.6; font-size: 17px;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,123,255,.18), transparent 70%),
+      radial-gradient(circle at 15% 40%, rgba(62,230,176,.06), transparent 40%);
+  }
+  a { color: var(--hit); }
+  code, pre, .mono { font-family: "JetBrains Mono", monospace; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; gap: 12px; }
+  .logo { font-weight: 700; letter-spacing: -.01em; font-size: 19px; color: var(--text); text-decoration: none; }
+  .logo span { color: var(--beat); }
+  nav .links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 15px; }
+  nav .links a { color: var(--muted); text-decoration: none; }
+  nav .links a:hover { color: var(--text); }
+
+  header.hero { padding: 56px 0 24px; }
+  .kicker { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--hit); letter-spacing: .06em; }
+  h1 { font-size: clamp(38px, 7vw, 68px); line-height: 1.02; letter-spacing: -.03em; margin: 12px 0 18px; max-width: 14ch; }
+  h1 em { font-style: normal; color: var(--beat); }
+  .lede { font-size: clamp(18px, 2.4vw, 21px); color: var(--muted); max-width: 46ch; margin: 0 0 28px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 12px 20px; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 16px;
+    border: 1px solid var(--line); color: var(--text); background: var(--card);
+  }
+  .btn.primary { background: var(--beat); border-color: var(--beat); color: #0b0820; }
+  .btn:hover { filter: brightness(1.1); }
+
+  /* demo */
+  .demo { margin: 40px 0 8px; background: linear-gradient(180deg, var(--bg2), var(--card)); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+  .demo-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 10px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  #stage { width: 100%; height: auto; display: block; }
+  .readout { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .readout b { color: var(--text); font-weight: 500; }
+  #status.found { color: var(--hit); }
+  .replay { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+  .replay:hover { color: var(--text); }
+
+  section { padding: 64px 0 8px; }
+  h2 { font-size: clamp(28px, 4vw, 38px); letter-spacing: -.02em; margin: 0 0 14px; }
+  .sub { color: var(--muted); max-width: 60ch; margin: 0 0 28px; }
+
+  .story { display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: start; }
+  .story blockquote { margin: 0; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.4; letter-spacing: -.01em; }
+  .story .side { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .story .side p { margin: 0 0 12px; color: var(--muted); font-size: 15px; }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .step .n { font-family: "JetBrains Mono", monospace; color: var(--beat); font-size: 13px; }
+  .step h3 { margin: 6px 0 6px; font-size: 19px; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+  .step code { color: var(--text); font-size: 13px; }
+
+  .catch { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .catch .col { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+  .catch h3 { margin: 0 0 8px; font-size: 18px; }
+  .catch ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
+  .catch li { margin: 6px 0; }
+  .yes h3 { color: var(--hit); } .no h3 { color: var(--warn); }
+
+  .report-frame { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; }
+  .report-frame iframe { width: 100%; height: 640px; border: 0; display: block; }
+
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; overflow-x: auto; font-size: 14px; line-height: 1.7; margin: 0; }
+  pre .c { color: var(--noise); }
+
+  footer { padding: 64px 0 40px; color: var(--muted); font-size: 14px; }
+  footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--line); padding-top: 20px; }
+  .fine { font-size: 13px; margin-top: 14px; max-width: 70ch; }
+
+  @media (max-width: 760px) {
+    .story, .catch { grid-template-columns: 1fr; }
+    nav .links a.hide-sm { display: none; }
+    .report-frame iframe { height: 520px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#">beat<span>-</span>guard</a>
+    <div class="links">
+      <a href="#how" class="hide-sm">How it works</a>
+      <a href="#report" class="hide-sm">Sample report</a>
+      <a href="#start">Get started</a>
+      <a href="https://github.com/jeffreyesdavid/beat-guard">GitHub</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="kicker">// FOR PRODUCERS</div>
+    <h1>Prove your beat is <em>yours.</em></h1>
+    <p class="lede">beat-guard fingerprints your beats, timestamps them on Bitcoin, and finds them inside other songs, even with vocals rapped over the top.</p>
+    <div class="cta">
+      <a class="btn primary" href="#start">Get started</a>
+      <a class="btn" href="https://github.com/jeffreyesdavid/beat-guard">View the code</a>
+    </div>
+
+    <div class="demo" aria-label="Animated demonstration of fingerprint matching">
+      <div class="demo-head">
+        <div class="legend">
+          <span><i class="dot" style="background:var(--beat)"></i>your beat's fingerprint</span>
+          <span><i class="dot" style="background:var(--noise)"></i>the suspect song</span>
+          <span><i class="dot" style="background:var(--hit)"></i>matching points</span>
+        </div>
+        <button class="replay" type="button" id="replay">↻ Replay</button>
+      </div>
+      <svg id="stage" viewBox="0 0 1000 300" role="img" aria-label="Your beat's fingerprint slides across a song until it lines up"></svg>
+      <div class="readout">
+        <span>Scanning: <b id="offset">0:00</b></span>
+        <span>Matching points: <b id="hits">0</b></span>
+        <span id="status">Searching for your beat…</span>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="wrap">
+  <section id="why">
+    <div class="story">
+      <blockquote>Bigger artists take beats from smaller, up-and-coming producers all the time, and the producer usually can't prove a thing.</blockquote>
+      <div class="side">
+        <p>I'm a producer. I built beat-guard so producers like me have real evidence: proof of <strong>when</strong> we made a beat, and proof of <strong>exactly where</strong> it shows up in someone else's song.</p>
+        <a class="btn" href="https://soundcloud.com/jeffreyesdavid">▶ Hear my music on SoundCloud</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <p class="sub">The same core idea Shazam uses, pointed at a different problem.</p>
+    <div class="steps">
+      <div class="step"><div class="n">01 · REGISTER</div><h3>Fingerprint your beat</h3><p>The loudest frequency peaks become a "constellation" that survives vocals, compression and noise. <code>register beat.wav</code></p></div>
+      <div class="step"><div class="n">02 · TIMESTAMP</div><h3>Prove when you made it</h3><p>Your file's SHA-256 hash is anchored on the Bitcoin blockchain with OpenTimestamps. Only the hash leaves your computer, never the audio.</p></div>
+      <div class="step"><div class="n">03 · CHECK</div><h3>Scan any song</h3><p>Thousands of matching points that all line up at the same moment can't be a coincidence. It also catches beats sped up or slowed to hide them. <code>check song.mp3</code></p></div>
+      <div class="step"><div class="n">04 · REPORT</div><h3>Get the evidence</h3><p>A clean report shows where your beat appears, which part was used, the speed change, and your proof of creation.</p></div>
+    </div>
+  </section>
+
+  <section id="catches">
+    <h2>What it catches</h2>
+    <p class="sub">Tested on beats with vocals on top, every one run through MP3 compression like a real release.</p>
+    <div class="catch">
+      <div class="col yes">
+        <h3>Catches</h3>
+        <ul>
+          <li>Your beat with vocals on top, even 3× louder than the beat</li>
+          <li>Samples as short as 5 seconds</li>
+          <li>Beats sped up or slowed down by up to 6%, with the exact speed change reported</li>
+          <li>MP3 compression from streaming and uploads</li>
+        </ul>
+      </div>
+      <div class="col no">
+        <h3>Doesn't catch (yet)</h3>
+        <ul>
+          <li>A melody re-played from scratch on different instruments</li>
+          <li>Pitch changed without tempo (or tempo without pitch)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="report">
+    <h2>Sample evidence report</h2>
+    <p class="sub">A real report from the built-in demo: a beat sped up 3% with vocals on top, found after an 8-second intro.</p>
+    <div class="report-frame"><iframe src="sample-report.html" title="Sample beat-guard evidence report"></iframe></div>
+  </section>
+
+  <section id="start">
+    <h2>Get started</h2>
+    <p class="sub">Runs on your own computer with Python 3.9+. Your beats never get uploaded anywhere.</p>
+<pre><span class="c"># install</span>
+git clone https://github.com/jeffreyesdavid/beat-guard.git
+cd beat-guard
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+
+<span class="c"># register your beats (export from your DAW as WAV or MP3)</span>
+python -m beatguard register ~/Music/beats/*.wav
+
+<span class="c"># check a song you're suspicious about</span>
+python -m beatguard check suspect_song.mp3 --report report.html</pre>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span>Built by <a href="https://github.com/jeffreyesdavid">Jeffrey David</a>, producer &amp; security analyst in training</span>
+      <span><a href="https://soundcloud.com/jeffreyesdavid">SoundCloud</a> · <a href="https://github.com/jeffreyesdavid/beat-guard">GitHub</a> · MIT License</span>
+    </div>
+    <p class="fine">beat-guard provides supporting evidence based on acoustic fingerprint matching. It is not a legal determination. To protect your work legally, register it with the U.S. Copyright Office and talk to an entertainment attorney.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  // A tiny re-enactment of how matching works: your beat's peaks slide across
+  // the song until thousands line up at the same offset.
+  const svg = document.getElementById('stage');
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 1000, H = 300, ROW_SONG = [150, 290], ROW_BEAT = [10, 120];
+  let seed = 7;
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  const beatW = 330, songW = 1000, trueOffset = 520;
+  const beatPeaks = Array.from({ length: 70 }, () => ({ x: rand() * beatW, y: rand() }));
+  const songPeaks = [];
+  for (let i = 0; i < 120; i++) songPeaks.push({ x: rand() * songW, y: rand(), match: false });          // other music + vocals
+  beatPeaks.forEach(p => { if (rand() > 0.2) songPeaks.push({ x: p.x + trueOffset, y: p.y, match: true }); }); // the stolen section
+
+  const el = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const yIn = (row, y) => row[0] + 10 + y * (row[1] - row[0] - 20);
+
+  svg.append(el('text', { x: 6, y: ROW_SONG[0] - 4, fill: '#9aa1c4', 'font-size': 13, 'font-family': 'JetBrains Mono, monospace' }));
+  svg.lastChild.textContent = 'SUSPECT SONG';
+  svg.append(el('rect', { x: 0, y: ROW_SONG[0], width: W, height: ROW_SONG[1] - ROW_SONG[0], rx: 10, fill: 'rgba(255,255,255,.02)', stroke: '#232a4a' }));
+  const songDots = songPeaks.map(p => { const c = el('circle', { cx: p.x, cy: yIn(ROW_SONG, p.y), r: 3.2, fill: '#4a5280' }); svg.append(c); return c; });
+
+  const beatGroup = el('g', {});
+  beatGroup.append(el('rect', { x: 0, y: ROW_BEAT[0], width: beatW, height: ROW_BEAT[1] - ROW_BEAT[0], rx: 10, fill: 'rgba(139,123,255,.08)', stroke: '#8b7bff', 'stroke-opacity': .5 }));
+  const label = el('text', { x: 10, y: ROW_BEAT[0] + 18, fill: '#8b7bff', 'font-size': 13, 'font-family': 'JetBrains Mono, monospace' });
+  label.textContent = 'YOUR BEAT';
+  beatGroup.append(label);
+  beatPeaks.forEach(p => beatGroup.append(el('circle', { cx: p.x, cy: yIn(ROW_BEAT, p.y), r: 3.2, fill: '#8b7bff' })));
+  svg.append(beatGroup);
+  const lines = el('g', {}); svg.insertBefore(lines, beatGroup);
+
+  const offsetEl = document.getElementById('offset'), hitsEl = document.getElementById('hits'), statusEl = document.getElementById('status');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let raf, start;
+
+  function frame(t) {
+    if (!start) start = t;
+    const progress = Math.min(1, (t - start) / 3200);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const offset = ease * trueOffset;
+    beatGroup.setAttribute('transform', `translate(${offset},0)`);
+    lines.replaceChildren();
+    let hits = 0;
+    songPeaks.forEach((p, i) => {
+      const near = p.match && Math.abs(offset - trueOffset) < 6;
+      songDots[i].setAttribute('fill', near ? '#3ee6b0' : '#4a5280');
+      songDots[i].setAttribute('r', near ? 4.4 : 3.2);
+      if (near) {
+        hits++;
+        const bp = { x: p.x, y: yIn(ROW_BEAT, p.y) };
+        lines.append(el('line', { x1: bp.x, y1: bp.y, x2: p.x, y2: yIn(ROW_SONG, p.y), stroke: '#3ee6b0', 'stroke-opacity': .35, 'stroke-width': 1 }));
+      }
+    });
+    const secs = Math.round(offset / songW * 180);
+    offsetEl.textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+    hitsEl.textContent = String(hits || Math.floor(rand() * 4));
+    if (progress < 1) { raf = requestAnimationFrame(frame); }
+    else { statusEl.textContent = '🚨 Match found: your beat starts at 1:34'; statusEl.className = 'found'; }
+  }
+  function play() {
+    cancelAnimationFrame(raf); start = null;
+    statusEl.textContent = 'Searching for your beat…'; statusEl.className = '';
+    if (reduce) { start = -1e9; frame(0); return; }
+    raf = requestAnimationFrame(frame);
+  }
+  document.getElementById('replay').addEventListener('click', play);
+  const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { play(); io.disconnect(); } });
+  io.observe(svg);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>beat-guard report</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#14181f; --muted:#5b6476; --line:#e2e5eb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0e1116; --card:#161b22; --text:#e8ebf0; --muted:#9aa4b2; --line:#2a313c; } }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui,-apple-system,sans-serif; }
+  main { max-width:820px; margin:0 auto; padding:32px 16px 48px; }
+  h1 { margin:0 0 4px; font-size:26px; } h2 { margin:0; font-size:19px; } h3 { font-size:15px; margin:20px 0 6px; }
+  .verdict { padding:14px 16px; border-radius:10px; font-weight:600; margin:18px 0; }
+  .hit { background:#fbe9e8; color:#8a1f1a; } .clear { background:#e5f2ee; color:#1f5e4a; }
+  @media (prefers-color-scheme: dark) { .hit { background:#3a1614; color:#f3b4b0; } .clear { background:#15302a; color:#9fe0c8; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:14px 0; }
+  .head { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .badge { font-size:13px; font-weight:600; padding:3px 10px; border-radius:999px; background:#d9534f; color:#fff; }
+  table { border-collapse:collapse; width:100%; margin-top:10px; }
+  th { text-align:left; color:var(--muted); font-weight:500; padding:4px 12px 4px 0; width:42%; vertical-align:top; }
+  td { padding:4px 0; } code { font-size:12.5px; } .hash { word-break:break-all; }
+  .label { margin:14px 0 4px; font-size:13px; color:var(--muted); }
+  .track { position:relative; height:12px; background:var(--line); border-radius:6px; overflow:hidden; }
+  .fill { position:absolute; top:0; bottom:0; border-radius:6px; }
+  .meta, .small { color:var(--muted); font-size:13px; }
+  .note { margin-top:28px; font-size:13px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px; }
+</style></head>
+<body><main>
+  <h1>beat-guard evidence report</h1>
+  <div class="meta">Generated 2026-10-03 01:13 UTC</div>
+  <div class="verdict hit">1 registered beat found in this song</div>
+  <table>
+    <tr><th>Suspect song</th><td><code>industry_song.mp3</code></td></tr>
+    <tr><th>Length</th><td>0:38</td></tr>
+    <tr><th>SHA-256 of suspect file</th><td><code class="hash">a7ba5de5c98cc5bcfd72a00d029d58de12283bf9409701367b9dc9f77451c780</code></td></tr>
+  </table>
+  
+<section class="card">
+  <div class="head"><h2>beat_cold_case</h2><span class="badge">Very strong match</span></div>
+  <table>
+    <tr><th>In the suspect song</th><td>0:08 to 0:38</td></tr>
+    <tr><th>Part of your beat used</th><td>0:11 to 0:40<br><span class="small">Your beat loops, so this section also matches its other repeats.</span></td></tr>
+    <tr><th>Speed</th><td>3.0% faster (likely sped up/slowed to disguise it)</td></tr>
+    <tr><th>Matching fingerprint points</th><td>6,781 (signal is 1,261x above random chance)</td></tr>
+    <tr><th>Coverage of that span</th><td>100%</td></tr>
+  </table>
+  <p class="label">Suspect song (0:38)</p><div class="track"><div class="fill" style="left:20.29%;width:79.14%;background:#d9534f"></div></div>
+  <p class="label">Your beat (0:40)</p><div class="track"><div class="fill" style="left:27.63%;width:71.17%;background:#2f8f6f"></div></div>
+  <h3>Proof of creation</h3>
+  <table>
+    <tr><th>Registered</th><td>2026-10-03 01:13:09 UTC</td></tr>
+    <tr><th>Original file</th><td><code>beat_cold_case.wav</code></td></tr>
+    <tr><th>SHA-256 of original file</th><td><code class="hash">4b93e11230a43a0498cd2f9493a6869e8d35d700bb544fa9532c3315a842368b</code></td></tr>
+  </table>
+  <p class="small">No blockchain timestamp on file for this beat.</p>
+</section>
+  <p class="note">This report shows that the audio of a registered beat appears in the suspect recording, based on
+  acoustic fingerprint matching. It is supporting evidence, not a legal determination. For legal protection,
+  register your work with the U.S. Copyright Office and consult an entertainment attorney.</p>
+</main></body></html>
